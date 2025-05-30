@@ -1,5 +1,5 @@
-"use client";
-import { voices } from "@/constants";
+"use client"
+
 import { Textarea } from "./textarea";
 import { subjects } from "@/constants";
 import React from "react";
@@ -24,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createCompanion } from "@/lib/actions/companion.action";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -35,6 +37,8 @@ const formSchema = z.object({
 });
 
 const Companionform = () => {
+
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,9 +51,18 @@ const Companionform = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-  };
+  const onSubmit =async (values: z.infer<typeof formSchema>) => {
+    const newCompanion=await createCompanion(values);   //here we are calling the createCompanion function from our actions which inserts the data.
+    if(newCompanion){
+      redirect(`/companions/${newCompanion.id}`)
+    }
+    else{
+      console.log('Companion insertion failed');
+      redirect('/');
+    }
+
+  }
+     
 
   return (
     <Form {...form}>
@@ -114,7 +127,7 @@ const Companionform = () => {
               <FormControl>
                 <Textarea
                   className="border-black"
-                  value={field.value}
+                 
                   defaultValue={field.value}
                   onChange={field.onChange}
                   placeholder="Enter the topic you want to learn about"

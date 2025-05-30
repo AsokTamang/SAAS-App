@@ -11,7 +11,7 @@ export default function Navbar() {
       </Link>
       <div className="flex flex-center gap-8">
         <NavItmes/>
-        <p>Sign in</p>
+       
 
       </div>
     </nav>
